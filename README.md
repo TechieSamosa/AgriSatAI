@@ -1,13 +1,15 @@
 # AgriSatAI 🌾
 
+[![Live Demo](https://img.shields.io/badge/Streamlit-Live%20Demo-FF4B4B?style=flat&logo=streamlit)](https://agrisatai.streamlit.app/)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
 [![Apache Spark](https://img.shields.io/badge/Spark-PySpark-orange)](https://spark.apache.org/)
 [![MinIO](https://img.shields.io/badge/Storage-MinIO-red)](https://min.io/)
 [![scikit-learn](https://img.shields.io/badge/ML-scikit--learn-blue)](https://scikit-learn.org/)
-[![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-AgriSatAI is a distributed ETL pipeline and predictive analytics platform for agriculture. It processes multi-spectral satellite imagery and weather data to predict crop health and forecast yields using ensemble machine learning models.
+AgriSatAI is a distributed ETL pipeline and predictive analytics platform for agriculture. It processes multi-spectral satellite imagery and weather data to predict crop health and forecast yields using ensemble machine learning models. 
+
+**Live App**: [agrisatai.streamlit.app](https://agrisatai.streamlit.app/)
 
 ---
 

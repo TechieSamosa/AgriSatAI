@@ -68,11 +68,15 @@ def extract_geotiff_metadata_local(spark, directory_path):
                     mean_red = float(np.mean(red_band))
                     mean_nir = float(np.mean(nir_band))
                     
+                    # Get center coordinates from GeoTIFF transform bounds
+                    lon = float((src.bounds.left + src.bounds.right) / 2)
+                    lat = float((src.bounds.top + src.bounds.bottom) / 2)
+                    
                     # Extract label from filename (e.g. field_1_healthy.tif)
                     parts = filename.split('_')
                     label = parts[2].split('.')[0] if len(parts) >= 3 else "unknown"
                     
-                    data.append((filename, mean_red, mean_nir, label))
+                    data.append((filename, mean_red, mean_nir, label, lat, lon))
             except Exception as e:
                 print(f"Error reading {filename}: {e}")
 
@@ -80,7 +84,9 @@ def extract_geotiff_metadata_local(spark, directory_path):
         StructField("field_id", StringType(), True),
         StructField("mean_red", DoubleType(), True),
         StructField("mean_nir", DoubleType(), True),
-        StructField("status_label", StringType(), True)
+        StructField("status_label", StringType(), True),
+        StructField("lat", DoubleType(), True),
+        StructField("lon", DoubleType(), True)
     ])
     
     if not data:
@@ -96,7 +102,7 @@ def extract_geotiff_metadata_local(spark, directory_path):
     try:
         with open(temp_path, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["field_id", "mean_red", "mean_nir", "status_label"])
+            writer.writerow(["field_id", "mean_red", "mean_nir", "status_label", "lat", "lon"])
             writer.writerows(data)
             
         df = spark.read.csv(temp_path, header=True, schema=schema)
