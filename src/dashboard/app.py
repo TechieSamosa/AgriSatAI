@@ -16,8 +16,19 @@ from config import settings
 st.set_page_config(page_title="AgriSatAI Dashboard", layout="wide", page_icon="🌾")
 
 # --- Helper Functions ---
+def get_csv_mtime():
+    csv_file = os.path.join(settings.BASE_DIR, 'output', 'processed_features_csv.csv')
+    return os.path.getmtime(csv_file) if os.path.exists(csv_file) else 0
+
+def get_models_mtime():
+    clf_path = os.path.join(settings.BASE_DIR, 'models', 'crop_health_ensemble.joblib')
+    reg_path = os.path.join(settings.BASE_DIR, 'models', 'yield_regressor.joblib')
+    t1 = os.path.getmtime(clf_path) if os.path.exists(clf_path) else 0
+    t2 = os.path.getmtime(reg_path) if os.path.exists(reg_path) else 0
+    return t1 + t2
+
 @st.cache_data
-def load_data():
+def load_data(mtime):
     try:
         csv_file = os.path.join(settings.BASE_DIR, 'output', 'processed_features_csv.csv')
         if not os.path.exists(csv_file):
@@ -34,7 +45,7 @@ def load_data():
         return None
 
 @st.cache_resource
-def load_models():
+def load_models(mtime):
     try:
         clf_path = os.path.join(settings.BASE_DIR, 'models', 'crop_health_ensemble.joblib')
         reg_path = os.path.join(settings.BASE_DIR, 'models', 'yield_regressor.joblib')
@@ -49,9 +60,8 @@ def load_profiling_data():
     if os.path.exists(log_file):
         return pd.read_csv(log_file)
     return None
-
-df = load_data()
-clf, reg = load_models()
+df = load_data(get_csv_mtime())
+clf, reg = load_models(get_models_mtime())
 
 # --- Sidebar ---
 st.sidebar.title("🌾 AgriSatAI")
